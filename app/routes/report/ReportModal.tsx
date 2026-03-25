@@ -26,7 +26,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
           );
           setMessages(response.data || []);
       } catch (error) {
-          console.error("Sent load error", error);
+          // console.error("Sent load error", error);
       }
   }, [fromDate, toDate]);
   

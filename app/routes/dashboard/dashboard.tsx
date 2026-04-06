@@ -202,7 +202,7 @@ export function Dashboard(){
                 {/* Pending Message Container */}
                 <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {/* <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200"> */}
-                    <div className="p-3 bg-red-50 rounded-lg border border-red-100">
+                    <div className="p-3 rounded-lg border border-red-500">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
                             {/* Title */}
                             <h2 className="text-xl font-semibold text-red-600">
@@ -315,7 +315,7 @@ export function Dashboard(){
                 {/* Sent Message Container */}
                 <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {/* <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200"> */}
-                    <div className="p-3 bg-green-50 rounded-lg border border-green-100">
+                    <div className="p-3 rounded-lg border border-green-500">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
                             {/* Title */}
                             <h2 className="text-xl font-semibold text-green-600">

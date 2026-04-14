@@ -21,15 +21,14 @@ const user = {
 };
 
 const navigation: NavItem[] = [
-  { name: "Dashboard", href: "/", current: false },
+  { name: "Dashboard", href: "/dashboard", current: false },
   { name: "Send SMS", href: "/sendsms", current: false },
   { name: "Report", href: "", current: false, isModal: true },
+  { name: "Account", href: "/account", current: false },
 ];
 
 const userNavigation: UserNavItem[] = [
-  { name: 'Your profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Log out', href: '#' },
 ];
 
 function classNames(...classes: string[]) {
@@ -86,24 +85,6 @@ export const Navbar: React.FC = () => {
             </div>
 
             <div className="hidden md:flex items-center">
-              <button className="relative p-1 text-gray-400 hover:text-white rounded-full focus:outline-none">
-                <span className="sr-only">View notifications</span>
-                {/* Simple bell icon */}
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
-                </svg>
-              </button>
 
               {/* Profile dropdown */}
               <div className="ml-3 relative">
@@ -116,7 +97,7 @@ export const Navbar: React.FC = () => {
                     <UserCircleIcon className="h-8 w-8 text-gray-300" />
                   </button>
                 </div>
-                {/* {userMenuOpen && (
+                {userMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
                     {userNavigation.map((item) => (
                       <a
@@ -128,7 +109,7 @@ export const Navbar: React.FC = () => {
                       </a>
                     ))}
                   </div>
-                )} */}
+                )} 
               </div>
             </div>
 
@@ -199,7 +180,7 @@ export const Navbar: React.FC = () => {
           </div>
         )}
       </nav>
-      <ReportModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ReportModal key={isModalOpen ? "open" : "closed"} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };

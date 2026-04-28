@@ -5,12 +5,9 @@ import Swal from "sweetalert2";
 
 
 export function Dashboard(){
-    // --- 1. Constants & Date Helpers ---
     const today = useMemo(() => new Date().toLocaleDateString("en-CA", {
         timeZone: "Asia/Manila"
     }), []);
-
-    // --- 2. ALL STATES (Must be defined BEFORE useMemo/useEffect) ---
     
     // Shared / Sent Table States
     const [messages, setMessages] = useState<any[]>([]);
@@ -40,6 +37,7 @@ export function Dashboard(){
                 { headers: { "Content-Type": "application/json" } }
             );
             setMessages(response.data || []);
+            console.log(response.data);
         } catch (error) {
             console.error("Sent load error", error);
         }
@@ -66,7 +64,8 @@ export function Dashboard(){
             const term = searchPending.toLowerCase();
             return (
                 msg.phoneNumber?.toLowerCase().includes(term) ||
-                msg.message?.toLowerCase().includes(term)
+                msg.message?.toLowerCase().includes(term) ||
+                msg.systemName?.toLowerCase().includes(term)
             );
         });
 
@@ -90,18 +89,36 @@ export function Dashboard(){
     }, [sortedPendingMessages, currentPagePending]);
 
     // Sent Table Logic
+    const COLUMN_MAP = {
+        "Phone Number": "phoneNumber",
+        "Message": "message",
+        "System Name": "systemName",
+        "Status": "status",
+        "Sent Date": "sentDate",
+        "Process Date": "receiveDate"
+    } as const; 
+
+    type ColumnLabel = keyof typeof COLUMN_MAP;
+
     const sortedMessages = useMemo(() => {
         const filtered = messages.filter((msg) => {
             const term = search.toLowerCase();
             return (
                 msg.phoneNumber?.toLowerCase().includes(term) ||
-                msg.message?.toLowerCase().includes(term)
+                msg.message?.toLowerCase().includes(term) ||
+                msg.systemName?.toLowerCase().includes(term)
             );
         });
 
         return [...filtered].sort((a, b) => {
-            const valA = (a as any)[sortColumn] || "";
-            const valB = (b as any)[sortColumn] || "";
+            let valA = (a as any)[sortColumn] || "";
+            let valB = (b as any)[sortColumn] || "";
+
+            // If sorting by date fields, compare as timestamps
+            if (sortColumn === 'sentDate' || sortColumn === 'receiveDate') {
+                valA = new Date(valA).getTime() || 0;
+                valB = new Date(valB).getTime() || 0;
+            }
 
             if (valA < valB) return sortDirection === "asc" ? -1 : 1;
             if (valA > valB) return sortDirection === "asc" ? 1 : -1;
@@ -169,11 +186,13 @@ export function Dashboard(){
         }
     };
 
-    const handleSort = (column: string) => {
-        if (sortColumn === column) {
+    const handleSort = (label: ColumnLabel) => {
+        const columnKey = COLUMN_MAP[label];
+        
+        if (sortColumn === columnKey) {
             setSortDirection(prev => prev === "asc" ? "desc" : "asc");
         } else {
-            setSortColumn(column);
+            setSortColumn(columnKey);
             setSortDirection("asc");
         }
     };
@@ -229,7 +248,7 @@ export function Dashboard(){
                         {/* Search Input */}
                         <input
                             type="text"
-                            placeholder="Search Phone Number or Message..."
+                            placeholder="Search..."
                             className="mb-4 w-1/2 md:w-1/3 px-3 py-2 border rounded-md focus:ring focus:ring-blue-300"
                             value={searchPending}
                             onChange={(e) => setSearchPending(e.target.value)}
@@ -240,7 +259,7 @@ export function Dashboard(){
                             <table className="min-w-full divide-y divide-gray-300">
                                 <thead className="bg-gray-100">
                                     <tr>
-                                        {["Phone Number", "Message", "Status", "Process Date"].map((col) => (
+                                        {["Phone Number", "Message", "System Name", "Status", "Process Date"].map((col) => (
                                             <th
                                                 key={col}
                                                 onClick={() => handleSortPending(col)}
@@ -272,6 +291,9 @@ export function Dashboard(){
                                                 </td>
                                                 <td className="px-4 py-2 text-sm text-gray-800">
                                                     {msg.message}
+                                                </td>
+                                                <td className="px-4 py-2 text-sm text-gray-800">
+                                                    {msg.systemName}
                                                 </td>
                                                 <td className="px-4 py-2 text-sm text-red-600 font-semibold">
                                                     Sending...
@@ -342,7 +364,7 @@ export function Dashboard(){
                         {/* Search Input */}
                         <input
                             type="text"
-                            placeholder="Search Phone Number or Message..."
+                            placeholder="Search..."
                             className="mb-4 w-1/2 md:w-1/3 px-3 py-2 border rounded-md focus:ring focus:ring-blue-300"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
@@ -353,15 +375,14 @@ export function Dashboard(){
                             <table className="min-w-full divide-y divide-gray-300">
                                 <thead className="bg-gray-100">
                                     <tr>
-                                        {["Phone Number", "Message", "Status", "Sent Date", "Process Date"].map((col) => (
+                                        {Object.entries(COLUMN_MAP).map(([label, key]) => (
                                             <th
-                                                key={col}
-                                                onClick={() => handleSort(col)}
+                                                key={label}
+                                                onClick={() => handleSort(label as ColumnLabel)}
                                                 className="px-4 py-2 text-left text-sm font-semibold text-gray-700 cursor-pointer"
                                             >
-                                                {col}
-                                                {sortColumn === col &&
-                                                    (sortDirection === "asc" ? " ▲" : " ▼")}
+                                                {label}
+                                                {sortColumn === key && (sortDirection === "asc" ? " ▲" : " ▼")}
                                             </th>
                                         ))}
                                     </tr>
@@ -385,6 +406,9 @@ export function Dashboard(){
                                                 </td>
                                                 <td className="px-4 py-2 text-sm text-gray-800">
                                                     {msg.message}
+                                                </td>
+                                                <td className="px-4 py-2 text-sm text-gray-800">
+                                                    {msg.systemName}
                                                 </td>
                                                 <td className="px-4 py-2 text-sm text-green-600 font-semibold">
                                                     {msg.status}

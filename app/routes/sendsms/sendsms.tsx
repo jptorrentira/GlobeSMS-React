@@ -158,7 +158,7 @@ export default function Sendsms(){
         try {
             // Send message
             const sendResponse = await axios.post(
-                "http://sodium2/SMARTSMS/api/SendSmsApi/send",
+                "http://aluminum/SMARTSMS_SMPC/api/SendSmsApi/send",
                 messageArray,
                 {
                     headers: {
@@ -170,7 +170,7 @@ export default function Sendsms(){
             // Upload message
             if(uploadMessageArray.length > 0){
                 const uploadResponse = await axios.post(
-                    "http://sodium2/SMARTSMS/api/SendSmsApi/uploadsms",
+                    "http://aluminum/SMARTSMS_SMPC/api/SendSmsApi/uploadsms",
                     uploadMessageArray,
                     {
                         headers: {

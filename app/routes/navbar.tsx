@@ -24,7 +24,7 @@ const navigation: NavItem[] = [
   { name: "Dashboard", href: "/dashboard", current: false },
   { name: "Send SMS", href: "/sendsms", current: false },
   { name: "Report", href: "", current: false, isModal: true },
-  { name: "Account", href: "/account", current: false },
+  // { name: "Account", href: "/account", current: false },
 ];
 
 const userNavigation: UserNavItem[] = [

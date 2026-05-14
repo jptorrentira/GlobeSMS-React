@@ -27,17 +27,15 @@ export function Dashboard(){
     const [currentPagePending, setCurrentPagePending] = useState(1);
     const pageSizePending = 10;
 
-    // --- 3. LOAD DATA FUNCTIONS (Wrapped in useCallback to prevent infinite loops) ---
     
     const loadData = useCallback(async () => {
         try {
             const response = await axios.post(
-                "http://sodium2/SMARTSMS/api/SendSmsApi/getCurrentSmsByStatus",
+                "http://aluminum/SMARTSMS_SMPC/api/SendSmsApi/getCurrentSmsByStatus",
                 { Status: "Sent", ReceiveDate: selectedDate },
                 { headers: { "Content-Type": "application/json" } }
             );
             setMessages(response.data || []);
-            console.log(response.data);
         } catch (error) {
             console.error("Sent load error", error);
         }
@@ -46,7 +44,7 @@ export function Dashboard(){
     const loadDataPending = useCallback(async () => {
         try {
             const response = await axios.post(
-                "http://sodium2/SMARTSMS/api/SendSmsApi/getCurrentSmsByStatus",
+                "http://aluminum/SMARTSMS_SMPC/api/SendSmsApi/getCurrentSmsByStatus",
                 { Status: "Unsent", ReceiveDate: selectedDatePending },
                 { headers: { "Content-Type": "application/json" } }
             );
@@ -56,8 +54,7 @@ export function Dashboard(){
         }
     }, [selectedDatePending]);
 
-    // --- 4. DATA PROCESSING (Filtering & Sorting) ---
-
+    
     // Pending Table Logic
     const sortedPendingMessages = useMemo(() => {
         const filtered = pendingMessages.filter((msg) => {
